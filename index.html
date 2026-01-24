@@ -1,29 +1,146 @@
-<!DOCTYPE html> 
-<html lang="fr"> 
-<head> 
- <meta charset="UTF-8"> 
- <title>Ma visite virtuelle</title> 
- 
- <link rel="stylesheet" href="https://unpkg.com/photo-sphere-viewer/dist/photo-sphere-viewer.css"> 
- <script src="https://unpkg.com/three/build/three.min.js"></script> 
- <script src="https://unpkg.com/photo-sphere-viewer/dist/photo-sphere-viewer.js"></script> 
- 
- <style> 
-   body { margin: 0; } 
-   #viewer { width: 100vw; height: 100vh; } 
- </style> 
-</head> 
-<body> 
- 
-<div id="viewer"></div> 
- 
-<script> 
- const viewer = new PhotoSphereViewer.Viewer({ 
-   container: document.getElementById('viewer'), 
-   panorama: 'https://photo-sphere-viewer-data.netlify.app/assets/sphere.jpg', 
-   navbar: true 
- }); 
-</script> 
- 
-</body> 
-</html> 
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Vaillant_studioN1_40m2</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <style>
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #000; 
+            font-family: sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        #panorama { 
+            width: 100%; 
+            flex: 1; 
+            background: #000; 
+        }
+
+        /* NAVIGATION BOUTONS EN BAS */
+        .bottom-nav {
+            display: flex; 
+            gap: 5px; 
+            padding: 10px; 
+            background: #222; 
+            justify-content: center; 
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: #444; 
+            color: white; 
+            border: 1px solid #666; 
+            padding: 12px 5px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 0.75rem; 
+            flex: 1; 
+            text-align: center; 
+            min-width: 80px;
+        }
+        .nav-btn:hover {
+            background: #555;
+        }
+
+        /* BANDEAU DE DESCRIPTION EN BAS */
+        #desc-panel {
+            width: 100%; 
+            background: #111; 
+            color: white; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            border-top: 1px solid #444; 
+            min-height: 80px; /* Hauteur minimale ajustée */
+            font-size: 0.85rem;
+        }
+
+        /* --- POLICE AGRANDIE POUR MOBILE --- */
+        @media (max-width: 768px) {
+            .nav-btn {
+                font-size: 1.3rem !important; /* Police très grande pour les boutons */
+                font-weight: bold;
+                padding: 15px 5px;
+            }
+            #desc-panel {
+                font-size: 1.4rem !important; /* Police très grande pour la description */
+            }
+            #desc-panel strong {
+                font-size: 1.5rem !important; /* Titre adresse très grand */
+                display: block;
+                margin-bottom: 5px;
+            }
+            #desc-panel p {
+                font-size: 1.3rem !important;
+                line-height: 1.4;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="panorama"></div>
+
+    <div class="bottom-nav">
+        <div class="nav-btn" onclick="viewer.loadScene('entree', 0, 0)">🏠 Entrée</div>
+        <div class="nav-btn" onclick="viewer.loadScene('sejour', 0, 0)">🛋️ Séjour</div>
+        <div class="nav-btn" onclick="viewer.loadScene('cuisine', 0, 0)">🍳 Cuisine</div>
+        <div class="nav-btn" onclick="viewer.loadScene('sdb', 0, 0)">🚿 SdB</div>
+    </div>
+
+    <div id="desc-panel">
+        <strong>Vaillant_studioN1_40m2</strong>
+        <p style="margin-top: 5px; color: #ccc;">Studio de 40m² idéalement situé. Il se compose d'une entrée, d'un séjour lumineux, d'une cuisine fonctionnelle et d'une salle de bain.</p>
+    </div>
+
+    <script>
+        var viewer = pannellum.viewer('panorama', {
+            "default": { 
+                "firstScene": "entree", 
+                "autoLoad": true, 
+                "hfov": 100, // Champ de vision horizontal par défaut
+                "pitch": 0,  // Angle vertical par défaut
+                "yaw": 0,    // Angle horizontal par défaut (centre de la photo)
+                "showControls": false // Masque les contrôles de zoom/gyroscope de Pannellum
+            },
+            "scenes": {
+                "entree": {
+                    "panorama": "vaillant_entree.jpg",
+                    "hotSpots": [] // Pas de hotspots pour la navigation via les photos
+                },
+                "sejour": {
+                    "panorama": "vaillant_sejour.jpg",
+                    "hotSpots": []
+                },
+                "cuisine": {
+                    "panorama": "vaillant_cuisine.jpg",
+                    "hotSpots": []
+                },
+                "sdb": {
+                    "panorama": "vaillant_sdb.jpg",
+                    "hotSpots": []
+                }
+            }
+        });
+
+        // Fonction pour ajuster la vue à l'arrivée dans une scène (optionnel, si vous voulez un angle précis)
+        // Exemple: si vous voulez que la cuisine se centre sur un four qui est à 90 degrés de l'avant de la photo
+        // Remplacez les 0 par les angles souhaités si l'avant de vos photos ne convient pas
+        viewer.on('loadscene', function(sceneId) {
+            let targetYaw = 0; // Angle par défaut
+            if (sceneId === 'entree') targetYaw = 0;
+            if (sceneId === 'sejour') targetYaw = 0; 
+            if (sceneId === 'cuisine') targetYaw = 0; // Ex: Mettre 90 si l'évier est à 90 degrés à droite
+            if (sceneId === 'sdb') targetYaw = 0;    // Ex: Mettre -45 si le lavabo est à 45 degrés à gauche
+
+            viewer.setYaw(targetYaw);
+        });
+    </script>
+</body>
+</html>
